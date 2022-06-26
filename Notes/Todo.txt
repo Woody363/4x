@@ -1,0 +1,27 @@
+PT do react course
+PT goals 
+- design patterns
+- smarter css
+- svg
+- c# inheritance
+
+0. convert text files to md files so can navigate the repo as website with a log :)
+
+1.Design plan razor page
+	a.) Some milestones
+		i.) pipeline process plan - pr-ing
+		ii.) ideology - e.g. super users set multiverse-universe options i.e races, options, css
+					user selects a universe - e.g. botf type universe and then sets up a game
+					user invites friends to play and plays
+		iii.)design principles in development always build in the development tools as these will aid our development tool
+		iv.) allow change the universe rules during game play in developmer mode for testing
+
+2. dummy data - and insert pages for it
+3. import functionality for universe creation
+4. place holder for sharing universes pages voting etc, just a text page
+5. identify screens
+6. identify game loops
+7. identify what strengths faults botf were
+8. create simple universe, turn timer, colony ship and simple colonising race game - then build
+9. reflect 1-9 wiki style page for choices direction each page and documentation of what we want to happen - discussion - space for ideas board etc - db design
+10. collect ideas from paper pad and whatsapp discussion into project
