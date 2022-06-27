@@ -1,0 +1,50 @@
+Woody - [commenting on screen while turn calculating]
+Something else that just came to mind, mostly as a nice front end tweak,
+ would be to have the units etc move smoothly between turns, over maybe 10 seconds,
+ so you can see events happening, maybe even have battles in the middle of the move
+ if two forces occupy same territory at same time, 
+ or it could show a unit group attempting to intercept or evade another. 
+ I don't think there would need to be anything extra on back end to make this work though.
+ So can be forgotten about until nearly finished
+ 
+ Phil[infastructure] .net6 in nov change .net8
+ We discussed how come back mechanics for us wernt a good idea. 
+ And how feeling tactical choices were. 
+ And how declaring a victory condition to shoot for added end game drama 
+ and could level playing field. 
+ Success you win game fail moral drop alliance against you less ahead. 
+ So I thought as a concept this should be risky choices to get a head (or win) 
+ e.g with dyson sphere if you canibakise your own planets to make.
+ Then have a planet turned into some destructable resource during the process.
+ If it gets taken out you've lost a system and depending how many local 
+ planets opportunity to make dyson sphere. Invites enemies to make tactical choices :)
+ -so game winning moments with risk of leveling playing field by enemies tactical reactions 
+ be it by diplomacy and forming alliances or subterfuge and sabotage etc
+ 
+ Phil [Technology]
+ We could have a trunk system where if you want to speed through tech you skip branches of tech
+ but branches have fun stuff in them but theyre esoteric so do not add to your general science progress
+ I dont know how it would work though once you pass that tech stage if your tech 9 
+ could you go back and do the level 2 branches? Maybe dnd classes would be useful food for thought on this.
+ Or a system where to unlock a tech level you need 3+ techs of the tech level below researched
+ so a closer link between objects and tech would be nice if the fast routes had consequences so were a mixed
+ blessing e.g. climate change, population, moral impacted
+ 
+ Woody[in response]
+Other options include bonuses for race that reaches specific branch first, leads to uniqueness with an otherwise linear system
+
+Phil [written on reflection not in the original chat]love this idea but feels a bit like double dipping
+you get the tech advantage and the moral advantage? or like in startrek diplomacy options like writing into contracts they cant develop that tech
+have a red background and a flag in the systems for things that are treaty breaking so players can chose to do things theyve said they wont
+but wont do so by mistake --- also bannable research first to do gen modding gets genetically modifed soldiers but then there 
+is a ban on the tech so only you have them --see angosian episode in star trek or doctor bashir episode ds9 for inspiration
+
+Woody [response to bannable] Maybe should be advantage to getting two level ahead like crytography
+in sabotage and bio weapons, better cloaking
+
+Phil [not in whatsapp chat but on review] double dipping but love it maybe tech levels should be hard
+to keep as an advantage but be a good advantage, so once someone hits tech level 4 all it takes is
+diplomicacy, defection, espionage, stealing a ship or planet to get hold of the tech, but while they have
+it they have some really good advantages. --this would provoke some tactical response from players
+maybe esoteric tech would be kept but the general tech level would be come 50% easier once exposed to superior
+technology - we didnt want catch up mechanics but this one would be overt and could have some good advantages
