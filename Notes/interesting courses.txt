@@ -1,0 +1,4 @@
+its postgres right at the end
+https://fullstackopen.com/en/part0/fundamentals_of_web_apps#ajax
+REACT WEBSITE ITSELF HAS RECOMMENDATIONS
+https://reactjs.net/tutorials/aspnetcore.html

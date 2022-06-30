@@ -1,0 +1,13 @@
+https://www.youtube.com/watch?v=fjYiWXHI7Mo
+https://blog.logrocket.com/getting-started-with-postgres-in-your-react-app/ - not read yet
+https://www.c-sharpcorner.com/UploadFile/john_charles/using-postgresql-from-microsoft-net/ - not read yet - written feb 2021 wonder 
+if need to consider .net6 in this and if we can skip edmx
+on personal compute add odbc
+
+choose an easy password to type into the console will need it alot
+will need to open the port in 
+windows defend fire wall -> advanced security -> inbound rule -> new rule
+will need to open (and set shortcut to do so as default) psql shell as admin
+then open pgadmin as admin
+
+some combination of the above made it work
