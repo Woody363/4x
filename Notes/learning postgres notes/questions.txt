@@ -1,0 +1,10 @@
+*how do you set a trigger on all table to set a deleted_on column for when something is set deleted - is a trigger the way to do it?
+*how do you store the modified date?
+*can you return a reference to a table column etc cleverly enough 
+*what is table space
+**could we do this for 
+***game creation
+****game campaign set up
+*****game chosen setting saves
+******games turn saves
+******player awareness and build order ui preference saves
