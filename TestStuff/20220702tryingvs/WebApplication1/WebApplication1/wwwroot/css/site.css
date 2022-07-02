@@ -16,3 +16,48 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+h1.red:disabled{
+background-color: green;
+}
+
+:disabled{
+
+
+}
+.yellow
+{
+  border-radius: 50%;
+  width:100px;
+  height:100px;
+
+}
+.sun
+{
+  background-color: yellow;
+}
+
+
+.red{
+  background-color: red;
+}
+.large
+{
+  border-radius: 10%;
+  width:100px;
+  height:100px;
+
+}
+.explode
+{
+  background-color: blue;
+  border-radius: 10%;
+  width:200px;
+  height:200px;
+
+}
+
+.inline
+{
+  display:table-cell;
+}

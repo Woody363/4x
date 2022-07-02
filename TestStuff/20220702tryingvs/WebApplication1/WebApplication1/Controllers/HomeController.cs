@@ -15,7 +15,11 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
+            //bool theyHavePermission = Dataquieries.CheckPermission();
+            //if(theyHavePermission){
             return View();
+            //}else
+            //{throw new Exception();}
         }
 
         public IActionResult Privacy()

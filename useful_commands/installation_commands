@@ -1,0 +1,3 @@
+Installing requirements for postgres cs integration as mentioned here: https://zetcode.com/csharp/postgresql/
+
+run dotnet add package Npgsql from terminal inside visual studio

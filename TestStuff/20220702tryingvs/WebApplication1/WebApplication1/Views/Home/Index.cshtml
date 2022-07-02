@@ -1,6 +1,38 @@
 ﻿@{
+    //stuff here is written in c#
     ViewData["Title"] = "Home Page";
+bool hi=false;
+
+Test dataqueries = new Test();
+
+//"Test" test
+
+hi=dataqueries.CheckPermission();
+
+    
+   
+@for (int j = 0; j < 5; j++) {
+<div>
+@for (int i = 0; i < 5; i++) 
+{
+    
+        
+<div id=(@(i)_@(j)) class="ourSuns sun yellow inline">@(hi)</div>
 }
+
+</div>
+}
+}
+
+ <div id="theSun" class="ourSuns yellow sun"></div>
+
+
+
+<h3>testing Loop</h3>
+    <ul>
+        <li class="ourSuns sun yellow"></li>
+        <li class="blackhole red explode" onClick="toggleMe(this)"></li>
+    </ul>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
