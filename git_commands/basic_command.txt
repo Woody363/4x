@@ -1,0 +1,7 @@
+
+
+to remove all files not in gitignore:
+
+git rm -r --cached .
+git add .
+git commit -m "Removes all .gitignore files and folders"
