@@ -1,0 +1,16 @@
+#clean database except id = 1
+
+			DELETE FROM "whatWillMultipleSchemasHelpUsWith"."W_locations_of_phenomena" WHERE id !=1; select*from "whatWillMultipleSchemasHelpUsWith"."W_locations_of_phenomena";
+
+#populate 10 by 10 grid of images or blank space
+#put click on images
+#have on click image change to next stage
+#have timer so naturally change as well
+#put image files in good place
+#set up config --- i think it is the appconfig, it should be ignore in git and manually put in places, it should hold private data for running in location its in, 
+##needs connecting string
+##needs reference to images folder maybe or local string
+
+
+
+###########Once all above completed set up a framework with config to just have the website live we can update with git

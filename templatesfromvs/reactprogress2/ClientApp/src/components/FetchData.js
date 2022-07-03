@@ -26,11 +26,11 @@ export class FetchData extends Component {
         </thead>
         <tbody>
           {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+            <tr key={forecast.Xcoord}>
+              <td>{forecast.Ycoord}</td>
+                  <td>{forecast.Phenomina.Name}</td>
+                  <td>{forecast.Phenomina.ImageFiles.FileLocation}</td>
+                  <td>{forecast.Ycoord}</td>
             </tr>
           )}
         </tbody>
