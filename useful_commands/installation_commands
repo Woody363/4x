@@ -1,3 +1,30 @@
 Installing requirements for postgres cs integration as mentioned here: https://zetcode.com/csharp/postgresql/
 
+https://www.tutlinks.com/minimal-web-api-with-crud-on-postgresql-dotnet-6/
+
 run dotnet add package Npgsql from terminal inside visual studio
+
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 6.0.0
+
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
+
+dotnet add package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore --version 6.0.0
+
+dotnet ef migrations add firstmigration --project NotesMinimalAPI.csproj
+
+dotnet tool install --global dotnet-ef
+
+dotnet ef migrations add firstmigration --project NotesMinimalAPI.csproj
+
+export PATH="$PATH:$HOME/.dotnet/tools"
+export DOTNET_ROOT=/snap/dotnet-sdk/current
+export MSBuildSDKsPath=$DOTNET_ROOT/sdk/$(${DOTNET_ROOT}/dotnet --version)/Sdks
+export PATH="${PATH}:${DOTNET_ROOT}"
+export PATH="$PATH:$HOME/.dotnet/tools"
+
+
+
+//sudo apt install nuget
+//nuget install NHibernate
+
+dotnet add package NHibernate --version 5.3.12
