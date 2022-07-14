@@ -10,6 +10,7 @@
 #set up config --- i think it is the appconfig, it should be ignore in git and manually put in places, it should hold private data for running in location its in, 
 ##needs connecting string
 ##needs reference to images folder maybe or local string
+get access for database working externally
 
 
 

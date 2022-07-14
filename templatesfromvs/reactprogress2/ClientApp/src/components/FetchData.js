@@ -29,7 +29,7 @@ export class FetchData extends Component {
             <tr key={forecast.Xcoord}>
               <td>{forecast.Ycoord}</td>
                   <td>{forecast.Phenomina.Name}</td>
-                  <td>{forecast.Phenomina.ImageFiles.FileLocation}</td>
+                  <td><img src={"images/"+forecast.Phenomina.ImageFiles.FileLocation} /></td>
                   <td>{forecast.Ycoord}</td>
             </tr>
           )}
