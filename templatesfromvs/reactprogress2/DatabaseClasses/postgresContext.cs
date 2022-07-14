@@ -40,7 +40,9 @@ namespace reactprogress2
             {
                 //qqqq do not commit this
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=qqqq;Database=postgres;Username=qqqq;Password=qqqq");
+                //I used the above installed secrets mananger but then found we have no startup and wasnt sure how to set up configurations
+                
+                optionsBuilder.UseNpgsql(/*.net cor 6 how get appsetting value here need to do that before secrets*/);
             }
         }
 
