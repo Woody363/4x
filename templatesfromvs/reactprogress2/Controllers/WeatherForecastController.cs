@@ -36,7 +36,7 @@ namespace reactprogress2.Controllers
                 for (int j = 0; j < 10; j++)
                 {
                     if (i == 0 && j == 0) { continue; }//ive put something in zero zero already
-                    if (new Random().NextDouble() > 0.2)//we will populate 20% of the time
+                    if (new Random().NextDouble() < 0.2)//we will populate 20% of the time
                     {
                         locationTableInDb.Add(new WLocationsOfPhenomenon()
                         {
