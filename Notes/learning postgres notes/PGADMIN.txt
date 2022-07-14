@@ -1,0 +1,2 @@
+We should have pgadmin in server mode and set up seperate logins
+lots mentions browser support

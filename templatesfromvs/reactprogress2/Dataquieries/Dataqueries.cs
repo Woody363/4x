@@ -6,58 +6,102 @@ namespace reactprogress2.Dataquieries
     {
         //qqqq
         public static int GetAnyData(){
+            try
+            {
+                using (postgresContext db = new postgresContext())
+                {
 
-            using (postgresContext db = new postgresContext()) {
-
-                return db.WSpacePhenominas.FirstOrDefault()?.Id??0;
+                    return db.WSpacePhenominas.FirstOrDefault()?.Id ?? 0;
+                }
             }
-        
+            catch (Exception e)
+            {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+                return 0; //return nothing found
+            }
+
+
         }
         public static String GetAnyName()
         {
-
-            using (postgresContext db = new postgresContext())
+            try
             {
+                using (postgresContext db = new postgresContext())
+                {
 
-                return db.WSpacePhenominas.FirstOrDefault()?.Name ?? "Nameless";
+                    return db.WSpacePhenominas.FirstOrDefault()?.Name ?? "Nameless";
+                }
+            }
+            catch (Exception e)
+            {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+                return "Nameless"; //return nothing found
             }
 
         }
 
         public static List<int> GetPhenomOfTypeIds(List<int> phenomTypeId)
         {
-
-            using (postgresContext db = new postgresContext())
+            try
             {
+                using (postgresContext db = new postgresContext())
+                {
 
-                return db.WSpacePhenominas.Where(x=>phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x=>x.Id).ToList<int>();
+                    return db.WSpacePhenominas.Where(x => phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x => x.Id).ToList<int>();
+                }
+            }
+            catch (Exception e)
+            {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+                //we might throw the error catch it in the controller and pass an error message to the user or provide an empty list check for it
+                //and if it can only be caused by error then handle it there
+                throw e;
             }
 
         }
 
-        public static void InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
+        public static bool InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
         {
-
-            using (postgresContext db = new postgresContext())
+            bool succeeded = false;
+            try
             {
+                using (postgresContext db = new postgresContext())
+                {
 
-                db.AddRange(phenomLocs);
-                db.SaveChanges();
+                    db.AddRange(phenomLocs);
+                    succeeded = (db.SaveChanges() == phenomLocs.Count());//if we saved as many as passed it succeeded
+                }
             }
+            catch (Exception e)
+            {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+
+
+            }
+            return succeeded;
 
         }
 
         public static List<WLocationsOfPhenomenon> GetPhenomsInAllLoc()
         {
-
-            using (postgresContext db = new postgresContext())
+            try
             {
-                List<WLocationsOfPhenomenon> locPhenoms = new List<WLocationsOfPhenomenon>();
-                locPhenoms = db.WLocationsOfPhenomena
-                    .Include(x => x.Phenomina.ImageFiles)
-                    .Select(x => x)
-                    .ToList<WLocationsOfPhenomenon>();
-                return locPhenoms;
+                using (postgresContext db = new postgresContext())
+                {
+                    List<WLocationsOfPhenomenon> locPhenoms = new List<WLocationsOfPhenomenon>();
+                    locPhenoms = db.WLocationsOfPhenomena
+                        .Include(x => x.Phenomina.ImageFiles)
+                        .Select(x => x)
+                        .ToList<WLocationsOfPhenomenon>();
+                    return locPhenoms;
+                }
+            }
+            catch (Exception e) 
+            {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+                //we might throw the error catch it in the controller and pass an error message to the user or provide an empty list check for it
+                //and if it can only be caused by error then handle it there
+                return new List<WLocationsOfPhenomenon>(); //return empty list
             }
 
         }

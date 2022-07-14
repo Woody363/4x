@@ -58,7 +58,10 @@ namespace reactprogress2.Controllers
                 }
             );
             }
-                Dataquieries.Dataqueries.InsertPhenomLocs(locationTableInDb);
+            if (!Dataquieries.Dataqueries.InsertPhenomLocs(locationTableInDb))
+            { 
+            //there was an error saving
+            };
 
                 List<WLocationsOfPhenomenon> locPenoms = new List<WLocationsOfPhenomenon>();
                 locPenoms = Dataquieries.Dataqueries.GetPhenomsInAllLoc(); //we would return this

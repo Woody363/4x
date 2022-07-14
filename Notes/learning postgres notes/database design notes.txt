@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=ztHopE5Wnpc&t=13804s
+
+4 hours
+good  andidate for indexing is alternate keys cols could of been a primary key non null etc
+anything we might search by in a where so oyr fks and bindings
+
+woody if you want to watch i wouldnt start before 4 and half hour mark
+
+fk on update cascade
