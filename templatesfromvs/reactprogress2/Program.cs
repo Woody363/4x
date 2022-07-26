@@ -1,8 +1,20 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.EntityFrameworkCore;
+using reactprogress2;
+using System.Diagnostics;
+using reactprogress2.Dataquieries;
+using reactprogress2.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllersWithViews();
+AppSettings appSettings = builder.Configuration.GetSection("appSettings").Get<AppSettings>();
+builder.Services.AddSingleton<AppSettings>();//This creates a dependency injection for constructor asking for it generated from here
+builder.Services.AddDbContext<PostgresContext>(options =>options.UseNpgsql(appSettings.ConnectionStrings.WoodyServer));
+builder.Services.AddScoped<TestQuieries>(); 
 
 var app = builder.Build();
 

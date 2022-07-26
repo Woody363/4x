@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using reactprogress2.Dataquieries;
 
 namespace reactprogress2.Controllers
 {
@@ -13,22 +16,27 @@ namespace reactprogress2.Controllers
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-        private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        protected readonly AppSettings appSettings;
+        private TestQuieries testQuieries;
+        public WeatherForecastController(AppSettings appSettings, TestQuieries testQuieries)
         {
-            _logger = logger;
+            this.appSettings = appSettings;
+            this.testQuieries = testQuieries;
         }
 
+
+
+
         [HttpGet]
-        public IActionResult /*IEnumerable<WLocationsOfPhenomenon>*/ Get()
+        public IActionResult Get()
         {
 
             //we want natural phenomina
             int naturalPhenominaTypeId = 1;
             List<int> phenomIds = new List<int>();
 
-            phenomIds = Dataquieries.Dataqueries.GetPhenomOfTypeIds(new List<int>() { naturalPhenominaTypeId });
+            phenomIds = testQuieries.GetPhenomOfTypeIds(new List<int>() { naturalPhenominaTypeId });
             List <WLocationsOfPhenomenon> locationTableInDb = new List<WLocationsOfPhenomenon>();
             //populate the locations table
             for (int i = 0; i < 10; i++)//this logic assumes the table is empty and does not check to ensure no duplication
@@ -58,13 +66,13 @@ namespace reactprogress2.Controllers
                 }
             );
             }
-            if (!Dataquieries.Dataqueries.InsertPhenomLocs(locationTableInDb))
+            if (!testQuieries.InsertPhenomLocs(locationTableInDb))
             { 
             //there was an error saving
             };
 
                 List<WLocationsOfPhenomenon> locPenoms = new List<WLocationsOfPhenomenon>();
-                locPenoms = Dataquieries.Dataqueries.GetPhenomsInAllLoc(); //we would return this
+                locPenoms = testQuieries.GetPhenomsInAllLoc(); //we would return this
 
             String serializedJson = JsonConvert.SerializeObject(locPenoms, Formatting.Indented, new JsonSerializerSettings
             {

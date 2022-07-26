@@ -1,18 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+//using WebApi.Helpers;
+using Microsoft.Extensions.Configuration;
+using reactprogress2.Data;
 
 namespace reactprogress2.Dataquieries
 {
-    public static class Dataqueries
+    public  class TestQuieries 
     {
-        //qqqq
-        public static int GetAnyData(){
+      
+        protected readonly AppSettings appSettings;
+        private PostgresContext db;
+
+        public TestQuieries(AppSettings appSettings,PostgresContext db)
+        {
+            this.appSettings = appSettings;
+            this.db = db;
+        }
+
+        
+
+        public int GetAnyData()
+        {
             try
             {
-                using (postgresContext db = new postgresContext())
-                {
 
+       
                     return db.WSpacePhenominas.FirstOrDefault()?.Id ?? 0;
-                }
+                
             }
             catch (Exception e)
             {
@@ -22,15 +37,13 @@ namespace reactprogress2.Dataquieries
 
 
         }
-        public static String GetAnyName()
+        public  String GetAnyName()
         {
             try
             {
-                using (postgresContext db = new postgresContext())
-                {
-
+   
                     return db.WSpacePhenominas.FirstOrDefault()?.Name ?? "Nameless";
-                }
+                
             }
             catch (Exception e)
             {
@@ -40,15 +53,14 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public static List<int> GetPhenomOfTypeIds(List<int> phenomTypeId)
+        public  List<int> GetPhenomOfTypeIds(List<int> phenomTypeId)
         {
             try
             {
-                using (postgresContext db = new postgresContext())
-                {
+       
 
                     return db.WSpacePhenominas.Where(x => phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x => x.Id).ToList<int>();
-                }
+                
             }
             catch (Exception e)
             {
@@ -60,17 +72,17 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public static bool InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
+        public  bool InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
         {
             bool succeeded = false;
             try
             {
-                using (postgresContext db = new postgresContext())
-                {
+
+         
 
                     db.AddRange(phenomLocs);
                     succeeded = (db.SaveChanges() == phenomLocs.Count());//if we saved as many as passed it succeeded
-                }
+                
             }
             catch (Exception e)
             {
@@ -82,21 +94,20 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public static List<WLocationsOfPhenomenon> GetPhenomsInAllLoc()
+        public  List<WLocationsOfPhenomenon> GetPhenomsInAllLoc()
         {
             try
             {
-                using (postgresContext db = new postgresContext())
-                {
+         
                     List<WLocationsOfPhenomenon> locPhenoms = new List<WLocationsOfPhenomenon>();
                     locPhenoms = db.WLocationsOfPhenomena
                         .Include(x => x.Phenomina.ImageFiles)
                         .Select(x => x)
                         .ToList<WLocationsOfPhenomenon>();
                     return locPhenoms;
-                }
+                
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 FileHandler.FileHandler.WriteExceptionFile(e);
                 //we might throw the error catch it in the controller and pass an error message to the user or provide an empty list check for it
@@ -105,6 +116,7 @@ namespace reactprogress2.Dataquieries
             }
 
         }
+
 
 
 
