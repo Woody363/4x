@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
-using reactprogress2.Dataquieries;
+using reactprogress2.Data.DataQueries;
 
 namespace reactprogress2.Controllers
 {
@@ -18,11 +18,11 @@ namespace reactprogress2.Controllers
 
 
         protected readonly AppSettings appSettings;
-        private TestQuieries testQuieries;
-        public WeatherForecastController(AppSettings appSettings, TestQuieries testQuieries)
+        private TestQueries testQueries;
+        public WeatherForecastController(AppSettings appSettings, TestQueries testQueries)
         {
             this.appSettings = appSettings;
-            this.testQuieries = testQuieries;
+            this.testQueries = testQueries;
         }
 
 
@@ -36,7 +36,7 @@ namespace reactprogress2.Controllers
             int naturalPhenominaTypeId = 1;
             List<int> phenomIds = new List<int>();
 
-            phenomIds = testQuieries.GetPhenomOfTypeIds(new List<int>() { naturalPhenominaTypeId });
+            phenomIds = testQueries.GetPhenomOfTypeIds(new List<int>() { naturalPhenominaTypeId });
             List <WLocationsOfPhenomenon> locationTableInDb = new List<WLocationsOfPhenomenon>();
             //populate the locations table
             for (int i = 0; i < 10; i++)//this logic assumes the table is empty and does not check to ensure no duplication
@@ -66,13 +66,13 @@ namespace reactprogress2.Controllers
                 }
             );
             }
-            if (!testQuieries.InsertPhenomLocs(locationTableInDb))
+            if (!testQueries.InsertPhenomLocs(locationTableInDb))
             { 
             //there was an error saving
             };
 
                 List<WLocationsOfPhenomenon> locPenoms = new List<WLocationsOfPhenomenon>();
-                locPenoms = testQuieries.GetPhenomsInAllLoc(); //we would return this
+                locPenoms = testQueries.GetPhenomsInAllLoc(); //we would return this
 
             String serializedJson = JsonConvert.SerializeObject(locPenoms, Formatting.Indented, new JsonSerializerSettings
             {
@@ -86,8 +86,8 @@ namespace reactprogress2.Controllers
                 //{
                 //    //data comes through this controller qqqq
                 //    Date = DateTime.Now.AddDays(index),
-                //    TemperatureC = Dataquieries.Dataqueries.GetAnyData(),//Random.Shared.Next(-20, 55),
-                //    Summary = Dataquieries.Dataqueries.GetAnyName()
+                //    TemperatureC = Dataqueries.Dataqueries.GetAnyData(),//Random.Shared.Next(-20, 55),
+                //    Summary = Dataqueries.Dataqueries.GetAnyName()
                 //})
                 //.ToArray();
 

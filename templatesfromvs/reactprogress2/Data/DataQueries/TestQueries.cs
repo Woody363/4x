@@ -4,30 +4,30 @@ using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using reactprogress2.Data;
 
-namespace reactprogress2.Dataquieries
+namespace reactprogress2.Data.DataQueries
 {
-    public  class TestQuieries 
+    public class TestQueries
     {
-      
+
         protected readonly AppSettings appSettings;
         private PostgresContext db;
 
-        public TestQuieries(AppSettings appSettings,PostgresContext db)
+        public TestQueries(AppSettings appSettings, PostgresContext db)
         {
             this.appSettings = appSettings;
             this.db = db;
         }
 
-        
+
 
         public int GetAnyData()
         {
             try
             {
 
-       
-                    return db.WSpacePhenominas.FirstOrDefault()?.Id ?? 0;
-                
+
+                return db.WSpacePhenominas.FirstOrDefault()?.Id ?? 0;
+
             }
             catch (Exception e)
             {
@@ -37,13 +37,13 @@ namespace reactprogress2.Dataquieries
 
 
         }
-        public  String GetAnyName()
+        public string GetAnyName()
         {
             try
             {
-   
-                    return db.WSpacePhenominas.FirstOrDefault()?.Name ?? "Nameless";
-                
+
+                return db.WSpacePhenominas.FirstOrDefault()?.Name ?? "Nameless";
+
             }
             catch (Exception e)
             {
@@ -53,14 +53,14 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public  List<int> GetPhenomOfTypeIds(List<int> phenomTypeId)
+        public List<int> GetPhenomOfTypeIds(List<int> phenomTypeId)
         {
             try
             {
-       
 
-                    return db.WSpacePhenominas.Where(x => phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x => x.Id).ToList<int>();
-                
+                throw new Exception("ahhhh");
+                return db.WSpacePhenominas.Where(x => phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x => x.Id).ToList();
+
             }
             catch (Exception e)
             {
@@ -72,17 +72,17 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public  bool InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
+        public bool InsertPhenomLocs(List<WLocationsOfPhenomenon> phenomLocs)
         {
             bool succeeded = false;
             try
             {
 
-         
 
-                    db.AddRange(phenomLocs);
-                    succeeded = (db.SaveChanges() == phenomLocs.Count());//if we saved as many as passed it succeeded
-                
+
+                db.AddRange(phenomLocs);
+                succeeded = db.SaveChanges() == phenomLocs.Count();//if we saved as many as passed it succeeded
+
             }
             catch (Exception e)
             {
@@ -94,18 +94,18 @@ namespace reactprogress2.Dataquieries
 
         }
 
-        public  List<WLocationsOfPhenomenon> GetPhenomsInAllLoc()
+        public List<WLocationsOfPhenomenon> GetPhenomsInAllLoc()
         {
             try
             {
-         
-                    List<WLocationsOfPhenomenon> locPhenoms = new List<WLocationsOfPhenomenon>();
-                    locPhenoms = db.WLocationsOfPhenomena
-                        .Include(x => x.Phenomina.ImageFiles)
-                        .Select(x => x)
-                        .ToList<WLocationsOfPhenomenon>();
-                    return locPhenoms;
-                
+
+                List<WLocationsOfPhenomenon> locPhenoms = new List<WLocationsOfPhenomenon>();
+                locPhenoms = db.WLocationsOfPhenomena
+                    .Include(x => x.Phenomina.ImageFiles)
+                    .Select(x => x)
+                    .ToList();
+                return locPhenoms;
+
             }
             catch (Exception e)
             {

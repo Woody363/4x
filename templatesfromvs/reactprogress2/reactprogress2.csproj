@@ -39,11 +39,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="nuget.config" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ErrorLogs\" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

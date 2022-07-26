@@ -4,9 +4,6 @@ using System.Configuration;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-//using WebApi.Entities; --doesnt know what it is
-//using System.Configuration;
-//trying the below
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
@@ -40,29 +37,6 @@ namespace reactprogress2.Data
         public virtual DbSet<WSpacePhenomenaTransistionBinding> WSpacePhenomenaTransistionBindings { get; set; } = null!;
         public virtual DbSet<WSpacePhenomenaType> WSpacePhenomenaTypes { get; set; } = null!;
         public virtual DbSet<WSpacePhenomina> WSpacePhenominas { get; set; } = null!;
-
-        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //        {
-        //            if (!optionsBuilder.IsConfigured)
-        //            {
-
-        //                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        //                //I used the above installed secrets mananger but then found we have no startup and wasnt sure how to set up configurations
-        //                // String connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["WoodyServer"].ConnectionString;
-        ////oh you can set the version!!!
-        //                //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0
-
-
-        //                String connectionString = Configuration.GetConnectionString("WoodyServer");
-        //                String connectionString1 = System.Configuration.ConfigurationManager.AppSettings["ConnectionStrings:WoodyServer"];
-        //                var connectionString2 = System.Configuration.ConfigurationManager.GetSection("ConnectionStrings");
-        //                // String connectionString1 = config.GetConnectionString("WoodyServer");
-        //                Debug.WriteLine(connectionString);
-        //                optionsBuilder.UseNpgsql(
-        //                    connectionString
-        //                    );
-        //            }
-        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
