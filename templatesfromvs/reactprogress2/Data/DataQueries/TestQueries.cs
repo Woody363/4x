@@ -57,8 +57,6 @@ namespace reactprogress2.Data.DataQueries
         {
             try
             {
-
-                throw new Exception("ahhhh");
                 return db.WSpacePhenominas.Where(x => phenomTypeId.Contains(x.SpacePhenominaTypeId)).Select(x => x.Id).ToList();
 
             }
