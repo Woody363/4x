@@ -1,3 +1,4 @@
+
 Installing requirements for postgres cs integration as mentioned here: https://zetcode.com/csharp/postgresql/
 
 https://www.tutlinks.com/minimal-web-api-with-crud-on-postgresql-dotnet-6/
@@ -32,3 +33,12 @@ dotnet add package NHibernate --version 5.3.12
 
 #######################
 https://www.npgsql.org/efcore/
+
+
+####accessing postrgres on server...
+sudo -i -u postgres
+psql
+then do commands...
+
+e.g. /password to change password
+

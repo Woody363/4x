@@ -5,7 +5,8 @@
 ErrorLogs/
 PrivateConfigurations/
 
-
+appsettings.json
+appsettings.Development.json
 
 # User-specific files
 *.suo

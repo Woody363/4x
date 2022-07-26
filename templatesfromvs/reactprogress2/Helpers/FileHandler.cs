@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace reactprogress2.FileHandler
 {
@@ -24,8 +25,19 @@ namespace reactprogress2.FileHandler
                 Smtp Logger:
                  
                  */
-                String filePath = String.Format("{0}ErrorLogs\\{1}.txt", AppDomain.CurrentDomain.RelativeSearchPath,DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss"));
+                //filePath if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)):  a ? b;
+                //if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+               //{
 
+                    
+                // Do something
+                String filePath = String.Format("{0}ErrorLogs{1}{2}.txt",
+                 AppDomain.CurrentDomain.RelativeSearchPath,
+                (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) ?  "/" : "\\",
+                 DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss"));
+  
+                 //this needs to be different on Linux/Windows, unless we find a non stringy way to do it 
+                
                 using (var writer = new StreamWriter(filePath, true))
                     {
                     writer.WriteLine("-----------------------------------------------------------------------------");
