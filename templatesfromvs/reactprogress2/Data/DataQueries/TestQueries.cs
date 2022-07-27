@@ -18,13 +18,10 @@ namespace reactprogress2.Data.DataQueries
             this.db = db;
         }
 
-
-
         public int GetAnyData()
         {
             try
             {
-
 
                 return db.WSpacePhenominas.FirstOrDefault()?.Id ?? 0;
 
