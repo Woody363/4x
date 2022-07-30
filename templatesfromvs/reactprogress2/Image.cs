@@ -1,4 +1,5 @@
-﻿using System;
+﻿using reactprogress2.Data.DbTables;
+using System;
 using System.Collections.Generic;
 
 namespace reactprogress2
@@ -6,11 +7,11 @@ namespace reactprogress2
     /// <summary>
     /// this is the table
     /// </summary>
-    public partial class WImageFile
+    public partial class Image
     {
-        public WImageFile()
+        public Image()
         {
-            WSpacePhenominas = new HashSet<WSpacePhenomina>();
+            PhenomSts = new HashSet<PhenomSt>();
         }
 
         public int Id { get; set; }
@@ -23,6 +24,6 @@ namespace reactprogress2
         public DateTime AddedOn { get; set; }
         public bool Deleted { get; set; }
 
-        public virtual ICollection<WSpacePhenomina> WSpacePhenominas { get; set; }
+        public virtual ICollection<PhenomSt> PhenomSts { get; set; }
     }
 }

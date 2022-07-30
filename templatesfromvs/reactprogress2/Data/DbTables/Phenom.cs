@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace reactprogress2
+namespace reactprogress2.Data.DbTables
 {
     /// <summary>
     /// for suns etc
+    /// phenomina state
     /// </summary>
-    public partial class SpacePhenominaState
+    public partial class Phenom
     {
         public int Id { get; set; }
         public string FriendlyName { get; set; } = null!;

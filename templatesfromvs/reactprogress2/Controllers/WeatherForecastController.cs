@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using reactprogress2.Data.DataQueries;
+using reactprogress2.Data.DbTables;
 
 namespace reactprogress2.Controllers
 {
@@ -29,24 +30,29 @@ namespace reactprogress2.Controllers
 
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult InitialPhenomGenerations()
         {
 
             //we want natural phenomina
             int naturalPhenominaTypeId = 1;
             List<int> phenomIds = new List<int>();
+            int[,] space = new int[2, 2];
+
+
+            int numberPhenomsThatWereDeleted = testQueries.DeleteAllPhenomsExcept0();
+
 
             phenomIds = testQueries.GetPhenomOfTypeIds(new List<int>() { naturalPhenominaTypeId });
-            List <WLocationsOfPhenomenon> locationTableInDb = new List<WLocationsOfPhenomenon>();
+            List <PhenomLoc> locationTableInDb = new List<PhenomLoc>();
             //populate the locations table
-            for (int i = 0; i < 10; i++)//this logic assumes the table is empty and does not check to ensure no duplication
+            for (int i = 0; i < space.GetLength(0); i++)//this logic assumes the table is empty and does not check to ensure no duplication
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < space.GetLength(1); j++)
                 {
                     if (i == 0 && j == 0) { continue; }//ive put something in zero zero already
                     if (new Random().NextDouble() < 0.2)//we will populate 20% of the time
                     {
-                        locationTableInDb.Add(new WLocationsOfPhenomenon()
+                        locationTableInDb.Add(new PhenomLoc()
                         {
                             Xcoord = i,
                             Ycoord = j,
@@ -58,7 +64,7 @@ namespace reactprogress2.Controllers
             }
             if (locationTableInDb.Count == 0)
             {//if by chance their is nout give us something
-                locationTableInDb.Add(new WLocationsOfPhenomenon()
+                locationTableInDb.Add(new PhenomLoc()
                 {
                     Xcoord = 9,
                     Ycoord = 9,
@@ -71,7 +77,7 @@ namespace reactprogress2.Controllers
             //there was an error saving
             };
 
-                List<WLocationsOfPhenomenon> locPenoms = new List<WLocationsOfPhenomenon>();
+                List<PhenomLoc> locPenoms = new List<PhenomLoc>();
                 locPenoms = testQueries.GetPhenomsInAllLoc(); //we would return this
 
             String serializedJson = JsonConvert.SerializeObject(locPenoms, Formatting.Indented, new JsonSerializerSettings

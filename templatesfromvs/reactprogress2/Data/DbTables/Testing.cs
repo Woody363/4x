@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace reactprogress2
+namespace reactprogress2.Data.DbTables
 {
     /// <summary>
     /// what is this?

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace reactprogress2
+namespace reactprogress2.Data.DbTables
 {
     /// <summary>
-    /// this would have super, type sub, type and player controller etc
+    /// this would have super, type sub, type and player controller etc --probably needs renaming
     /// </summary>
     public partial class SpaceShipStationOrCreature
     {

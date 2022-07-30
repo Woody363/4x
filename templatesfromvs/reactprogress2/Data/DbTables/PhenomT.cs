@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace reactprogress2
+namespace reactprogress2.Data.DbTables
 {
     /// <summary>
-    /// Natural and artificial lets says
+    /// Natural and artificial lets says for phenomena types
     /// </summary>
-    public partial class WSpacePhenomenaType
+    public partial class PhenomT
     {
-        public WSpacePhenomenaType()
+        public PhenomT()
         {
-            WSpacePhenominas = new HashSet<WSpacePhenomina>();
+            PhenomSts = new HashSet<PhenomSt>();
         }
 
         public int Id { get; set; }
@@ -19,6 +19,6 @@ namespace reactprogress2
         public string InGameDescription { get; set; } = null!;
         public bool Deleted { get; set; }
 
-        public virtual ICollection<WSpacePhenomina> WSpacePhenominas { get; set; }
+        public virtual ICollection<PhenomSt> PhenomSts { get; set; }
     }
 }
