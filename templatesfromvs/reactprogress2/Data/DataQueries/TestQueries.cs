@@ -141,7 +141,23 @@ namespace reactprogress2.Data.DataQueries
         }
 
         //qqqqqq next put in controller add make a js class not expecting this to work straught away need refinement
-        public List<PhenomLoc> GetPhenomsAfterTransistionTrigger(List<PhenomTransTriggerInstruction> phenomInstructions)
+        public List<PhenomLoc> GetDeletedPhenoms() 
+        {
+            //query just useful for testing --- be aware there will be lots in same loc
+            List<PhenomLoc> deletedPhenoms = new List<PhenomLoc>(){ };
+            try {
+
+
+                return db.PhenomLocs.Where(x => x.Deleted == true).ToList<PhenomLoc>();
+
+            } catch (Exception e) {
+                FileHandler.FileHandler.WriteExceptionFile(e);
+                return new List<PhenomLoc>(); 
+
+            }
+        
+        }
+        public List<PhenomLoc> GetPhenomsAfterTransistionTrigger(IList<PhenomTransTriggerInstruction> phenomInstructions)
         {
             try
             {
@@ -155,31 +171,45 @@ namespace reactprogress2.Data.DataQueries
                 List<PhenomTrans> phenomTrans = new List<PhenomTrans>() { };
                 List<PhenomLoc> phenomLocUpdate = new List<PhenomLoc>() { };
 
-                phenomTrans = db.PhenomLocs
-                    .Where(x => phenomIds.Contains(x.Id))
+                phenomTrans = 
+                    db.PhenomLocs
+                    .Where(x =>
+                    phenomIds.Contains(x.Id) 
+                    /*&& x.Deleted == false*/
+                    )
                     .Join( //we need to track which each transistions to
-                    db.PhenomTransBs,
+                    db.PhenomTransBs.Include(x=>x.NextPhenomenaStage.ImageFiles),
                     phenom => phenom.PhenominaId,
                     trans => trans.PhenomenaId,
                     (phenom, trans) => new { phenom = phenom, trans = trans })
-                    //All our phenom are linked to their transistion they could have multiple
+                    .ToList()//I dont want to return the data yet but i dont know how to pass to the database my list<objectt>
+                
+                //All our phenom are linked to their transistion they could have multiple
+             
                     .Where //filter out transistions that dont hit the threshould next i think is exclusive
-                    (x =>
-                     //find the phenoma in the trigger list if found (dont know why it wouldnt be) assume each phenomina only once
-                     (rnd.Next(0, 100) / 100) < (phenomInstructions.Find(y => y.PhenomId == x.phenom.Id) //get the phenom
-                        .OverrideProbability //use its overide
-                        ?? x.trans.ProbabilityOfTransistion) //if the overide is null then
-                    )
+                (x =>
+                //we will have excluded transistionless phenomena here
+                 //find the phenoma in the trigger list if found (dont know why it wouldnt be) assume each phenomina only once
+                 ((Double)rnd.Next(0, 100) / 100) < (
+                    phenomInstructions.First(y => y.PhenomId == x.phenom.Id) //get the phenom
+                    .OverrideProbability //use its overide
+                    ?? x.trans.ProbabilityOfTransistion 
+                    ) //if the overide is null then
+                )
                     .GroupBy(
                          x => x.phenom.Id)
-                        // grp =>  //we could grab by fk here but we are reducing further first
-                        //(key, grp) => new { key, grp.First() })
-                    .Select(x => x.OrderBy(y=>rnd.Next(x.Count())).First())//if we have more than one transistion pick it at random
-                    .Include(x=>x.trans.NextPhenomenaStage)//we dont actually need this as we only need to update the id
-                    .Select(x=>new PhenomTrans(){ 
-                    PhenomLoc = x.phenom,
-                    NewPhenomSt = x.trans.NextPhenomenaStage
-                    }).ToList< PhenomTrans>();//we cant just update in the query because we need to return it the front
+                    // grp =>  //we could grab by fk here but we are reducing further first
+                    //(key, grp) => new { key, grp.First() })
+                    .Select(x => x.OrderBy(y => rnd.Next(x.Count())).First())//if we have more than one transistion pick it at random
+                   //.Include(x => x.trans.NextPhenomenaStage.ImageFiles)//the update only changes the id but the front needs the new associated data
+                    .Select(x => new PhenomTrans()
+                    {
+                        PhenomLoc = x.phenom,
+                        NewPhenomSt = x.trans.NextPhenomenaStage
+                    }).ToList<PhenomTrans>();//we cant just update in the query because we need to return it the front
+
+
+                //qqqqq turn off lazy loading
 
                 if (phenomTrans.Count > 0)
                 {
@@ -193,7 +223,7 @@ namespace reactprogress2.Data.DataQueries
             }
             catch (Exception e)
             {
-                FileHandler.FileHandler.WriteExceptionFile(e);
+               FileHandler.FileHandler.WriteExceptionFile(e);
                 //we might throw the error catch it in the controller and pass an error message to the user or provide an empty list check for it
                 //and if it can only be caused by error then handle it there
                 return new List<PhenomLoc>(); //return empty list
