@@ -116,15 +116,7 @@ namespace reactprogress2.Controllers
 
 
                 return Ok(serializedJson);
-                //this works
-                //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                //{
-                //    //data comes through this controller qqqq
-                //    Date = DateTime.Now.AddDays(index),
-                //    TemperatureC = Dataqueries.Dataqueries.GetAnyData(),//Random.Shared.Next(-20, 55),
-                //    Summary = Dataqueries.Dataqueries.GetAnyName()
-                //})
-                //.ToArray();
+          
             }
             catch (Exception e)
             {
