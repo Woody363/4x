@@ -1,0 +1,179 @@
+-- 1 get all phenomina sharing locations (rank and group)
+-- 2 create the first temp table for iteration 1 if it has no length proc will end
+-- 3 iterate through colliding subsequent phenoms with first in list updating the firsts type
+-- 4 update phenoms type for the first in a group and set the rest deleted
+
+--qqqqqqqqqqq   struggling dont know when it is using sql or psql and dont know either enough to be confident of the issue
+
+
+
+-------------------                                     1 Get colliding phenoms
+
+ drop table if exists  phenomSharingLocToIterateThrough;
+ create temporary table phenomSharingLocToIterateThrough(
+     id serial,
+     xcoord integer,
+     ycoord integer,
+     phenom_loc_id integer, ---by doing this are we losing the advantage of our fk
+     phenom_type_id integer, --we are not going to fk to this but instead update all data in this table by iteration then apply it
+     group_id integer,
+     id_in_group integer,
+     processed boolean default false --mark true when not in use --change the type 
+     
+ );
+ 
+     insert into phenomSharingLocToIterateThrough --to avoid lots of joins we are going to update this table and then apply it once finished to the real data
+     (
+         xcoord,
+         ycoord,
+         phenom_loc_id,
+         phenom_type_id, --for id_in_group 1 this will be updated and it phenom updated and all others set deleted
+         group_id,
+         id_in_group 
+     )
+
+     select 
+     --null as id,
+     xcoord as xcoord,
+     ycoord as ycoord,
+     phenom_loc_id as phenom_loc_id,
+     phenom_type_id as phenom_type_id, --we are not joining from phenom_loc to get this so we must ENSURE it is uptodate
+     --we do this work (ranking) after having reduced the data to just those with shared locations i.e collisions
+     dense_rank() OVER (ORDER BY xcoord, ycoord)::integer as group_id,
+     row_number() over (partition by xcoord, ycoord ORDER BY xcoord, ycoord)::integer   as id_in_group
+
+     from (
+     select
+     loc.xcoord as xcoord,
+     loc.ycoord as ycoord,
+     id as phenom_loc_id,
+     phenomina_id as phenom_type_id, 
+     count(*) OVER (partition BY loc.xcoord, loc.ycoord)::integer as no_in_group 
+     from
+      myschema.phenom_loc loc
+     WHERE --if there is only one there is no collision
+     loc.id != 1 ---ignoring the amoeba thing for now
+     and loc.deleted = false
+         ) rowsBeforeGroupCount    
+       where no_in_group > 1;
+
+
+
+
+
+
+
+
+
+
+--set loopIteration = 2;  qqqq --should always track the rank so rather than the loop we could do regression and call it on the id_in_group values still left
+
+
+------------struggling to get do while working so having to repeat this code!!!!
+ drop table if exists  phenomCollisionThisIteration;
+ create temp table phenomCollisionThisIteration(
+        firstPhenomInGroupLocId integer, 
+        collidingPhenomLocId integer, 
+        lowest_phenom_type_id integer, 
+        highest_phenom_type_id integer
+ );
+
+ insert into phenomCollisionThisIteration(
+        firstPhenomInGroupLocId , 
+        collidingPhenomLocId , 
+        lowest_phenom_type_id , 
+        highest_phenom_type_id 
+ )
+ select firstPhenomInGroupLocId, 
+        collidingPhenomLocId, 
+        least(phenom_first_type_id,phenom_colliding_type_id)  lowest_phenom_type_id, --there is only 2
+        greatest(phenom_first_type_id,phenom_colliding_type_id) highest_phenom_type_id  --there is only 2
+        from (
+       (select phenom_loc_id firstPhenomInGroupLocId,phenom_type_id phenom_first_type_id, group_id 
+       from phenomSharingLocToIterateThrough
+       where 
+       processed = false  
+       and id_in_group =  1 -- is always 1 because this is the one we update
+       ) firstPhenomInGroup
+       join (select phenom_loc_id collidingPhenomLocId,phenom_type_id phenom_colliding_type_id, group_id 
+         from phenomSharingLocToIterateThrough 
+         where 
+         processed = false 
+         and id_in_group =  2  --loopIteration qqqq
+   ) collidingPhenom on collidingPhenom.group_id = firstPhenomInGroup.group_id
+   ) collidingPhenoms;
+ 
+
+
+
+--qqqq   tried lots combinations so this trying to run the do whil may be a mess of sql and psql
+--while (select (select count(*) from phenomCollisionThisIteration) > 0)   --there are outstanding collsions stills
+--begin
+ 
+ drop table if exists  phenomCollisionThisIteration;
+ create temp table phenomCollisionThisIteration(
+        firstPhenomInGroupLocId integer, 
+        collidingPhenomLocId integer, 
+        lowest_phenom_type_id integer, 
+        highest_phenom_type_id integer
+ );
+
+ insert into phenomCollisionThisIteration(
+        firstPhenomInGroupLocId , 
+        collidingPhenomLocId , 
+        lowest_phenom_type_id , 
+        highest_phenom_type_id 
+ )
+ select firstPhenomInGroupLocId, 
+        collidingPhenomLocId, 
+        least(phenom_first_type_id,phenom_colliding_type_id)  lowest_phenom_type_id, --there is only 2
+        greatest(phenom_first_type_id,phenom_colliding_type_id) highest_phenom_type_id  --there is only 2
+        from (
+       (select phenom_loc_id firstPhenomInGroupLocId,phenom_type_id phenom_first_type_id, group_id 
+       from phenomSharingLocToIterateThrough
+       where 
+       processed = false  
+       and id_in_group =  1 -- is always 1 because this is the one we update
+       ) firstPhenomInGroup
+       join (select phenom_loc_id collidingPhenomLocId,phenom_type_id phenom_colliding_type_id, group_id 
+         from phenomSharingLocToIterateThrough 
+         where 
+         processed = false 
+         and id_in_group =  2  --loopIteration qqqq
+   ) collidingPhenom on collidingPhenom.group_id = firstPhenomInGroup.group_id
+   ) collidingPhenoms;    
+
+update phenomSharingLocToIterateThrough 
+set phenom_type_id = (CASE WHEN (random()< event_sbt.probability_event_occured) THEN event_sbt.phenomena_outcome_fk ELSE event_sbt.phenomena_default_outcome_fk END)
+from phenomSharingLocToIterateThrough p 
+join phenomCollisionThisIteration c on c.firstphenomingrouplocid = p.phenom_loc_id
+--a left join here would let us check for nulls where were missing an event
+join myschema.phenom_shared_location_event_binding b on c.lowest_phenom_type_id = phenom1_sbt and c.highest_phenom_type_id = phenom2_sbt
+join myschema.event_sbt event_sbt on event_sbt.id = b.event_sbt_id
+where p.id_in_group =  1; --shouldnt be necessary
+
+--using the iteration value will set as processed -- could/should by goining the colliding phenom locId but this way if lose data we set as processed
+update phenomSharingLocToIterateThrough  
+set processed = true where id_in_group = 2;  --loopIteration qqqq
+
+
+    --qqqq loopIteration++ 
+--- end;  qqqq
+
+------------------    4   we have finished updating the temp table so now we apply it to the actual data
+
+
+select * from phenomSharingLocToIterateThrough --to check outcome
+ 
+ 
+ -----------------Developing proc
+    --step 10
+    --updateTempTable with new phenom outcome
+    --updateProcessed
+    --if no event just mark as processed
+      
+    --step 11 make it iterate so if multiple it works through all  
+    --step 12 make it update phenomLoc table
+    --step 13 create a newsThisTurnTableBinding --- insert locations and news about what happened there
+    --step 14 put new stored proc into a trigger --for efficiency can we reduce the table first by the inserted locations
+    --step 15 work out how we will flag to the front end some have changed --- turn changed binding? for now woody would provide new locations then request the turnChanged table? --for us will just always be zero or something

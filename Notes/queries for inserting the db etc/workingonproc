@@ -1,0 +1,150 @@
+--think i need partition by
+--im trying to partition but im probably able to join to itself would be more effective but less efficient
+
+/*
+SELECT id, friendly_name, phenom1_sbt, phenom2_sbt, event_sbt_id, deleted
+	FROM myschema.phenom_shared_location_event_binding;
+  */  
+ ----------------Example data
+ drop 
+ table phenomSharingLocToIterateThrough;
+ create temp table phenomSharingLocToIterateThrough(
+     id serial,
+     xcoord integer,
+     ycoord integer,
+     phenom_loc_id integer, ---by doing this are we losing the advantage of our fk
+     phenom_type_id integer,
+     group_id integer,
+     id_in_group integer,
+     processed boolean default false --mark true when not in use --change the type 
+     
+ );
+ 
+ 
+
+ insert into phenomSharingLocToIterateThrough --to avoid lots of joins we are going to update this table and then apply it once finished to the real data
+ (
+     xcoord,
+     ycoord,
+     phenom_loc_id,
+     phenom_type_id, --for id_in_group 1 this will be updated and it phenom updated and all others set deleted
+     group_id,
+     id_in_group 
+ )
+ 
+ 
+ --select loc.xcoord, loc.ycoord, Min(loc.id) as phenom1_id, Max(loc.id) as phenom2_id 
+ --from 
+ --(
+ select 
+ --null as id,
+ xcoord as xcoord,
+ ycoord as ycoord,
+ phenom_loc_id as phenom_loc_id,
+ phenom_type_id as phenom_type_id, --we are not joining from phenom_loc to get this so we must ENSURE it is uptodate
+ group_id as group_id,
+ id_in_group as id_in_group
+ 
+ from (
+ select
+ loc.xcoord,
+ loc.ycoord,
+ id as phenom_loc_id,
+ phenomina_id as phenom_type_id,
+ dense_rank() OVER (ORDER BY loc.xcoord, loc.ycoord)::integer as group_id,
+ row_number() over (partition by loc.xcoord, loc.ycoord ORDER BY loc.xcoord, loc.ycoord)::integer   as id_in_group
+ ,count(*) OVER (partition BY loc.xcoord, loc.ycoord)::integer as no_in_group 
+ /*--because we cannot do this count check in having we are doing all the work on the other columns just to disgard them
+ so we should just select the table filtered first
+ or join the table to itself where id is not equal on the two xcoord ycoord
+ or per insert trigger a check and run this
+ */
+
+ --min(loc.id) over (partition by loc.xcoord, loc.ycoord) as phenom_loc_1_id,
+ --max(loc.id) over (partition by loc.xcoord, loc.ycoord) as phenom_loc_2_id
+ --loc.xcoord,loc.ycoord
+ --,
+ --min(loc.id) as phenom_loc_2_id,
+ --max(loc.id) as phenom_loc_2_id 
+ from
+  myschema.phenom_loc loc
+     
+ --join myschema.phenom phen on loc.phenomina_id = phen.id
+ WHERE 
+ loc.id != 1
+ and loc.deleted = false
+     ) rowsBeforeGroupCount    
+   where no_in_group > 1;
+--having  group_id > 1
+ --LOC.ID BETWEEN 2 AND 3  --WOULD COME from front as two in same location
+ --and loc.xcoord = loc.ycoord
+ --order by loc.phenomina_id
+ --group by loc.xcoord, loc.ycoord we want to order the group and do other operations
+-- order by loc.phenomina_id -- we want to always treat lower id as phenomina 1 in binding table so dont need to populate both combinations in table 
+ --limit 2 --we will only handle 2 at once and replace with one
+ 
+
+-- set loopIteration integer := 2;
+--alternatively coold partion by id_in_group then group by because will have dupes every row
+ drop table phenomCollisionThisIteration;
+ create temp table phenomCollisionThisIteration(
+        firstPhenomInGroupLocId integer, 
+        collidingPhenomLocId integer, 
+        lowest_phenom_type_id integer, 
+        highest_phenom_type_id integer
+ );
+ select*from phenomCollisionThisIteration;
+ insert into phenomCollisionThisIteration(
+        firstPhenomInGroupLocId , 
+        collidingPhenomLocId , 
+        lowest_phenom_type_id , 
+        highest_phenom_type_id 
+ )
+ select firstPhenomInGroupLocId, 
+        collidingPhenomLocId, 
+        least(phenom_first_type_id,phenom_colliding_type_id)  lowest_phenom_type_id, 
+        greatest(phenom_first_type_id,phenom_colliding_type_id) highest_phenom_type_id
+        from (
+       (select phenom_loc_id firstPhenomInGroupLocId,phenom_type_id phenom_first_type_id, group_id 
+       from phenomSharingLocToIterateThrough
+       where 
+       processed = false  
+       and id_in_group =  1 -- is always 1 because this is the one we update
+       ) firstPhenomInGroup
+       join (select phenom_loc_id collidingPhenomLocId,phenom_type_id phenom_colliding_type_id, group_id 
+         from phenomSharingLocToIterateThrough 
+         where 
+         processed = false 
+         and id_in_group =  2 --loopIteration
+   ) collidingPhenom on collidingPhenom.group_id = firstPhenomInGroup.group_id
+   ) collidingPhenoms;
+   
+   select 
+   *,
+   'to do based on prob occured' resultingTypeOfCollision
+   random()< event_sbt.probability_event_occured useDefaultOutcome --can we put this in the join itself?
+   , (event_sbt.id is null) noEventFound
+   from phenomCollisionThisIteration collision
+   left join myschema.phenom_shared_location_event_binding b on collision.lowest_phenom_type_id = phenom1_sbt and collision.highest_phenom_type_id = phenom2_sbt--if there is no event we want to do something still hence left
+   join myschema.event_sbt event_sbt on event_sbt.id = b.event_sbt_id
+   join myschema.phenom resultingPhenom on event_sbt.phenomena_outcome_fk = resultingPhenom.id
+   join myschema.phenom defaultResultingPhenom on event_sbt.phenomena_default_outcome_fk = defaultResultingPhenom.id
+ 
+    
+
+
+ 
+
+ 
+ 
+ -----------------Developing proc
+    --step 10
+    --updateTempTable with new phenom outcome
+    --updateProcessed
+    --if no event just mark as processed
+      
+    --step 11 make it iterate so if multiple it works through all  
+    --step 12 make it update phenomLoc table
+    --step 13 create a newsThisTurnTableBinding --- insert locations and news about what happened there
+    --step 14 put new stored proc into a trigger --for efficiency can we reduce the table first by the inserted locations
+    --step 15 work out how we will flag to the front end some have changed --- turn changed binding? for now woody would provide new locations then request the turnChanged table? --for us will just always be zero or something

@@ -1,0 +1,41 @@
+
+--select * from myschema.event_sbt;
+
+
+INSERT INTO myschema.event_sbt(
+	--id, 
+    friendly_name, 
+    --deleted, 
+    event_t_id, 
+    description,
+    news_feed_fk, 
+    probability_event_occured, 
+    phenomena_outcome_fk, 
+    phenomena_default_outcome_fk
+)
+
+	select 
+    distinct --the equals will result in duplication where the ids match
+        --?, 
+        CONCAT(firstPhenom.id, '+', secondPhenom.id) as friendly_name, 
+        --?, 
+        1 as event_t_id, --stella event 1 and amoeba is 2 
+         Concat(firstPhenom.id,' less than equal ',secondPhenom.id ,'  -----   ', firstPhenom.friendly_name, '+', secondPhenom.friendly_name) as description, 
+        1 as news_feed_fk,--?, 
+        Round((100.00 - ((firstPhenom.id + secondPhenom.id)*2))/100.00,2) as probability_event_occured, 
+         ---blackhole if it gets the one we dont want to use
+         --otherwise cycle through the id start again when over 14
+        --id + id always equals 2 and we never want zero so -1
+        CASE (6 = (mod(firstPhenom.id + secondPhenom.id-1,14)+1)) when true then 12 else (mod(firstPhenom.id + secondPhenom.id-1,14)+1) end  as phenomena_outcome_fk, 
+        12 as phenomena_default_outcome_fk --default to blackhole
+    from
+    myschema.phenom firstPhenom
+    join
+    myschema.phenom secondPhenom  on  firstPhenom.id <= secondPhenom.id --so we dont have to duplicate both combinations
+    where
+   -- firstPhenom.deleted == false --we dont seem to have a del column
+   -- &&  secondPhenom.deleted == false
+   -- && 
+   firstPhenom.space_phenomina_type_id = 1 --exclude the amoeba
+   --&& why does double && not work
+   and secondPhenom.space_phenomina_type_id = 1;
